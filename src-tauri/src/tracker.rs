@@ -125,11 +125,11 @@ fn spawn_keyboard_loop(app: AppHandle) {
             rdev::EventType::KeyPress(_) => {
                 let _ = app.emit("companion://keyboard", ());
             }
-            rdev::EventType::Wheel { .. } => {
-                if last_scroll.elapsed() >= Duration::from_millis(300) {
-                    last_scroll = std::time::Instant::now();
-                    let _ = app.emit("companion://scroll", ());
-                }
+            rdev::EventType::Wheel { .. }
+                if last_scroll.elapsed() >= Duration::from_millis(300) =>
+            {
+                last_scroll = std::time::Instant::now();
+                let _ = app.emit("companion://scroll", ());
             }
             _ => {}
         });
