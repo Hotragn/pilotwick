@@ -17,7 +17,7 @@ It watches your cursor, cheers when your AI finishes a long task, holds your to-
 
 <img src="docs/assets/hero.png" alt="Pilotwick reacting to Claude, VS Code and Spotify" width="640" />
 
-**[Download](../../releases) · [What it does](#-what-makes-pilotwick-different) · [Create your own](#-create-your-own-companion) · [Add an integration](#-add-an-app-integration-in-15-lines) · [Showcase](#-showcase)**
+**[pilotwick.app](https://hotragn.github.io/pilotwick/) · [Download](../../releases) · [What it does](#-what-makes-pilotwick-different) · [Create your own](#-create-your-own-companion) · [Add an integration](#-add-an-app-integration-in-15-lines) · [Showcase](#-showcase)**
 
 </div>
 
@@ -213,6 +213,7 @@ be switched off individually in the Studio.
 | 🐶 Biscuit | core team | built-in |
 | 🐱 Mochi | core team | built-in |
 | 🐉 Ember | core team | built-in |
+| 🟢 Blip · 👻 Wisp · 🤖 Bolt | core team | [community/profiles](community/profiles/) |
 | *your creation here* | *you* | [submit →](CONTRIBUTING.md) |
 
 ## 🗺️ Roadmap
