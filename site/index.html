@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pilotwick — a local-first desktop companion</title>
+<meta name="description" content="A desktop companion that reacts to what you are actually doing — agents, editors, CI — and keeps your tasks and focus timer on screen. Local-first, vendor-neutral, no telemetry. Windows, macOS and Linux." />
+<link rel="icon" href="icon.png" />
+
+<meta property="og:title" content="Pilotwick — a local-first desktop companion" />
+<meta property="og:description" content="Reacts to your agents, editors and CI. Keeps your tasks and focus timer on screen. No account, no telemetry." />
+<meta property="og:image" content="https://hotragn.github.io/pilotwick/hero.png" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --panel: #121829;
+    --line: #23304d;
+    --text: #e8edf7;
+    --muted: #93a1bd;
+    --accent: #ffb14d;
+    --accent-2: #6c5ce7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(900px 520px at 18% -8%, #1d2647 0%, transparent 60%),
+      radial-gradient(700px 420px at 92% 8%, #2a1d52 0%, transparent 58%),
+      var(--bg);
+    color: var(--text);
+    font: 16px/1.65 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+  header { padding: 40px 0 8px; display: flex; align-items: center; gap: 12px; }
+  header img { width: 38px; height: 38px; border-radius: 9px; }
+  header b { font-size: 17px; letter-spacing: -0.01em; }
+  header nav { margin-left: auto; display: flex; gap: 22px; }
+  header nav a { color: var(--muted); text-decoration: none; font-size: 14px; }
+  header nav a:hover { color: var(--text); }
+
+  h1 {
+    font-size: clamp(34px, 5.6vw, 58px);
+    line-height: 1.06;
+    letter-spacing: -0.03em;
+    margin: 44px 0 18px;
+    max-width: 17ch;
+  }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lede { font-size: clamp(17px, 2.1vw, 20px); color: var(--muted); max-width: 62ch; margin: 0 0 30px; }
+
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn {
+    display: inline-block; padding: 13px 22px; border-radius: 11px;
+    font-weight: 650; font-size: 15px; text-decoration: none; border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--accent); color: #2a1803; }
+  .btn-primary:hover { background: #ffc06b; }
+  .btn-ghost { border-color: var(--line); color: var(--text); }
+  .btn-ghost:hover { background: #18203a; }
+  .platforms { color: var(--muted); font-size: 13px; }
+
+  .shot { margin: 46px 0 8px; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 70px rgba(0,0,0,.5); }
+  .shot img { display: block; width: 100%; }
+
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); margin: 68px 0 20px; font-weight: 700; }
+
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; }
+  .card h3 { margin: 0 0 8px; font-size: 16px; letter-spacing: -0.01em; }
+  .card p { margin: 0; color: var(--muted); font-size: 14.5px; }
+  .card .k { color: var(--accent); font-weight: 700; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  td { padding: 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td:first-child { color: var(--muted); width: 42%; padding-right: 20px; }
+
+  footer { margin: 80px 0 60px; color: var(--muted); font-size: 13.5px; border-top: 1px solid var(--line); padding-top: 26px; display: flex; gap: 18px; flex-wrap: wrap; }
+  footer a { color: var(--muted); }
+  .note { color: var(--muted); font-size: 13.5px; margin-top: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <img src="icon.png" alt="" />
+    <b>Pilotwick</b>
+    <nav>
+      <a href="https://github.com/Hotragn/pilotwick">GitHub</a>
+      <a href="https://github.com/Hotragn/pilotwick/releases">Releases</a>
+      <a href="https://github.com/Hotragn/pilotwick/blob/main/docs/ARCHITECTURE.md">Docs</a>
+    </nav>
+  </header>
+
+  <h1>Your desktop, <em>quietly aware</em> of what you're doing.</h1>
+
+  <p class="lede">
+    Pilotwick is a small companion that lives on your screen and reacts to your
+    real work — the agent that's thinking, the editor you're in, the build that
+    just went red. It holds your tasks and your focus timer too. Everything runs
+    on your machine.
+  </p>
+
+  <div class="cta">
+    <a class="btn btn-primary" href="https://github.com/Hotragn/pilotwick/releases/latest">Download</a>
+    <a class="btn btn-ghost" href="https://github.com/Hotragn/pilotwick">Star on GitHub</a>
+    <span class="platforms">Windows · macOS · Linux · MIT</span>
+  </div>
+
+  <div class="shot"><img src="hero.png" alt="Pilotwick's Companion Studio with the pet beside it" /></div>
+
+  <h2>What it's actually for</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>See CI without a tab</h3>
+      <p>Kick off a build and go do something else. When it breaks, the pet turns red, hisses, and keeps a <span class="k">CI</span> chip up until you deal with it.</p>
+    </div>
+    <div class="card">
+      <h3>Know when the agent is done</h3>
+      <p>Stop watching a terminal. Pilotwick reads whichever assistant you use — it isn't tied to one vendor — and celebrates when a long run finishes.</p>
+    </div>
+    <div class="card">
+      <h3>Keep one thing in view</h3>
+      <p>Tasks with real reminders, a Pomodoro timer beside the pet, and an honest breakdown of where the day actually went.</p>
+    </div>
+  </div>
+
+  <h2>Why it's different</h2>
+  <table>
+    <tr><td>Works with every tool</td><td>Editors, terminals, browsers, chat, design apps, games and git — not one company's agent.</td></tr>
+    <tr><td>Local-first</td><td>No account, no telemetry, no backend. Two opt-in features touch the network, both off by default.</td></tr>
+    <tr><td>Never in the way</td><td>Click-through everywhere except the pet itself, and it steps aside for presentations and fullscreen.</td></tr>
+    <tr><td>Yours to change</td><td>Add an app reaction in one TypeScript file, or upload your own artwork as a shareable profile.</td></tr>
+  </table>
+
+  <h2>What touches the network</h2>
+  <table>
+    <tr><td>Weather moods <em>(opt-in)</em></td><td>Open-Meteo — the city name you typed, nothing else.</td></tr>
+    <tr><td>Work status <em>(opt-in)</em></td><td>GitHub, through your own <code>gh</code> CLI, using credentials you already authorised.</td></tr>
+  </table>
+  <p class="note">
+    Typing is counted, never recorded — the keyboard hook discards the key code
+    before it reaches the app. Window titles are matched locally and never leave
+    the machine.
+  </p>
+
+  <footer>
+    <span>MIT licensed</span>
+    <a href="https://github.com/Hotragn/pilotwick">Source</a>
+    <a href="https://github.com/Hotragn/pilotwick/issues">Issues</a>
+    <a href="https://github.com/Hotragn/pilotwick/blob/main/CONTRIBUTING.md">Contribute</a>
+    <span style="margin-left:auto">A pilot light for your workday.</span>
+  </footer>
+
+</div>
+</body>
+</html>
