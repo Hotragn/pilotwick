@@ -103,7 +103,7 @@ pub fn spawn(app: AppHandle) {
                 }
             }
 
-            if tick % REMOTE_EVERY_TICKS != 0 {
+            if !tick.is_multiple_of(REMOTE_EVERY_TICKS) {
                 continue;
             }
 

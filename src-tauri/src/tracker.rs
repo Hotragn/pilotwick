@@ -74,14 +74,14 @@ fn spawn_cursor_loop(app: AppHandle) {
         // Start interactive so the very first hover state change is applied.
         let mut interactive = true;
         loop {
-            if let (Ok(cursor), Some(win)) =
-                (app.cursor_position(), app.get_webview_window("main"))
+            if let (Ok(cursor), Some(win)) = (app.cursor_position(), app.get_webview_window("main"))
             {
                 if let (Ok(pos), Ok(size)) = (win.outer_position(), win.outer_size()) {
                     let (wx, wy) = (pos.x as f64, pos.y as f64);
                     let (ww, wh) = (size.width as f64, size.height as f64);
 
-                    let [bl, bt, br, bb] = HIT_BOX.lock().map(|b| *b).unwrap_or([0.0, 0.0, 1.0, 1.0]);
+                    let [bl, bt, br, bb] =
+                        HIT_BOX.lock().map(|b| *b).unwrap_or([0.0, 0.0, 1.0, 1.0]);
                     let (hx, hy) = (wx + ww * bl, wy + wh * bt);
                     let (hw, hh) = (ww * (br - bl), wh * (bb - bt));
 
@@ -90,8 +90,7 @@ fn spawn_cursor_loop(app: AppHandle) {
                         && cursor.y >= hy - HOVER_PADDING
                         && cursor.y <= hy + hh + HOVER_PADDING;
 
-                    let want_interactive =
-                        hovering || FORCE_INTERACTIVE.load(Ordering::Relaxed);
+                    let want_interactive = hovering || FORCE_INTERACTIVE.load(Ordering::Relaxed);
 
                     // Only touch the OS window flag on transitions.
                     if want_interactive != interactive {

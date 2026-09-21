@@ -76,7 +76,12 @@ fn foreground_is_fullscreen(_app: &AppHandle, _pos: &active_win_pos_rs::WindowPo
     /// The desktop and the taskbar are borderless and monitor-sized, so they
     /// pass every geometric fullscreen test. Without this, clicking your
     /// wallpaper makes the companion disappear.
-    const SHELL_CLASSES: [&str; 4] = ["Progman", "WorkerW", "Shell_TrayWnd", "Shell_SecondaryTrayWnd"];
+    const SHELL_CLASSES: [&str; 4] = [
+        "Progman",
+        "WorkerW",
+        "Shell_TrayWnd",
+        "Shell_SecondaryTrayWnd",
+    ];
 
     unsafe {
         let hwnd = GetForegroundWindow();

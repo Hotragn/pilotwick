@@ -70,12 +70,18 @@ pub fn spawn(app: AppHandle) {
                         if *last_branch != branch {
                             let _ = app.emit(
                                 "companion://git",
-                                GitEvent { kind: "branch".into(), detail: branch.clone() },
+                                GitEvent {
+                                    kind: "branch".into(),
+                                    detail: branch.clone(),
+                                },
                             );
                         } else if *last_hash != hash {
                             let _ = app.emit(
                                 "companion://git",
-                                GitEvent { kind: "commit".into(), detail: branch.clone() },
+                                GitEvent {
+                                    kind: "commit".into(),
+                                    detail: branch.clone(),
+                                },
                             );
                         }
                     }
@@ -88,7 +94,10 @@ pub fn spawn(app: AppHandle) {
                     let kind = if conflict { "conflict" } else { "resolved" };
                     let _ = app.emit(
                         "companion://git",
-                        GitEvent { kind: kind.into(), detail: String::new() },
+                        GitEvent {
+                            kind: kind.into(),
+                            detail: String::new(),
+                        },
                     );
                 }
             } else {

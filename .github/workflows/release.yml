@@ -1,0 +1,91 @@
+name: Release
+
+# Tag a version and every platform's installer is built and attached to a
+# draft release. This is how macOS and Linux builds happen without owning
+# either machine — the maintainer only has Windows hardware.
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            target: aarch64-apple-darwin
+            label: macOS (Apple Silicon)
+          - platform: macos-latest
+            target: x86_64-apple-darwin
+            label: macOS (Intel)
+          - platform: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            label: Linux
+          - platform: windows-latest
+            target: x86_64-pc-windows-msvc
+            label: Windows (x64)
+          - platform: windows-11-arm
+            target: aarch64-pc-windows-msvc
+            label: Windows (ARM64)
+
+    name: ${{ matrix.label }}
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Tauri v2 on Linux needs webkit2gtk 4.1; rdev and active-win also want
+      # the X11 development headers for global input and focus detection.
+      - name: Install Linux dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libxdo-dev \
+            libx11-dev \
+            libxi-dev \
+            libxtst-dev \
+            libxcb1-dev \
+            libxcb-randr0-dev \
+            build-essential \
+            file
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+          key: ${{ matrix.target }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # Catch type errors before spending minutes on a Rust build.
+      - run: npx tsc --noEmit
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "Pilotwick ${{ github.ref_name }}"
+          releaseBody: "Download the installer for your platform below. Unsigned for now, so Windows SmartScreen and macOS Gatekeeper will warn on first run."
+          releaseDraft: true
+          prerelease: false
+          args: --target ${{ matrix.target }}

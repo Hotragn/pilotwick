@@ -141,11 +141,7 @@ fn set_overlay_scale(app: tauri::AppHandle, scale: f64) {
 /// (Re)binds the global hotkeys. Empty strings unbind. Accepts the standard
 /// accelerator syntax, e.g. "CommandOrControl+Shift+E".
 #[tauri::command]
-fn apply_hotkeys(
-    app: tauri::AppHandle,
-    toggle: String,
-    summon: String,
-) -> Result<(), String> {
+fn apply_hotkeys(app: tauri::AppHandle, toggle: String, summon: String) -> Result<(), String> {
     let shortcuts = app.global_shortcut();
     let _ = shortcuts.unregister_all();
 
@@ -224,10 +220,8 @@ pub fn run() {
             let settings_item =
                 MenuItem::with_id(app, "settings", "Companion Studio…", true, None::<&str>)?;
             let quit_item = MenuItem::with_id(app, "quit", "Quit Pilotwick", true, None::<&str>)?;
-            let menu = Menu::with_items(
-                app,
-                &[&show_item, &summon_item, &settings_item, &quit_item],
-            )?;
+            let menu =
+                Menu::with_items(app, &[&show_item, &summon_item, &settings_item, &quit_item])?;
 
             TrayIconBuilder::new()
                 .icon(app.default_window_icon().unwrap().clone())
