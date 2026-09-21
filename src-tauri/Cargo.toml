@@ -1,0 +1,45 @@
+[package]
+name = "pilotwick"
+version = "0.1.0"
+description = "Pilotwick — a context-aware desktop companion that lives on your screen"
+authors = ["Pilotwick contributors"]
+license = "MIT"
+edition = "2021"
+
+[lib]
+name = "pilotwick_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["macos-private-api", "tray-icon"] }
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-autostart = "2"
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-notification = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# Global keyboard activity (listen-only, never logs which keys)
+rdev = "0.5"
+# Cross-platform "which app is focused" detection
+active-win-pos-rs = "0.8"
+
+# Telling a real fullscreen app apart from a merely maximized window needs
+# the window style bits, which `active-win-pos-rs` does not expose. This is
+# the same `windows` crate version Tauri already pulls in.
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.61", features = [
+  "Win32_Foundation",
+  "Win32_Graphics_Gdi",
+  "Win32_UI_WindowsAndMessaging",
+] }
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

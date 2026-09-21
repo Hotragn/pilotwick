@@ -1,0 +1,28 @@
+# Node
+node_modules/
+dist/
+
+# Rust / Tauri
+src-tauri/target/
+src-tauri/gen/
+# machine-local cargo overrides (e.g. target-dir outside cloud-synced folders)
+.cargo/
+
+# Editors & OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local scratch: competitor research, reference art and personal companion
+# profiles. Kept out of the repo — third-party artwork cannot ship under MIT.
+_local/
+
+# Personal companion profiles bundle their artwork as base64 and get large;
+# the curated community gallery is the exception.
+*.companion.json
+!community/profiles/*.companion.json
