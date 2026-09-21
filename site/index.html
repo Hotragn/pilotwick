@@ -4,158 +4,338 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Pilotwick — a local-first desktop companion</title>
-<meta name="description" content="A desktop companion that reacts to what you are actually doing — agents, editors, CI — and keeps your tasks and focus timer on screen. Local-first, vendor-neutral, no telemetry. Windows, macOS and Linux." />
+<meta name="description" content="A desktop companion that reacts to your real work: the agent that is thinking, the editor you are in, the build that just went red. Local-first, vendor-neutral, no telemetry. Windows, macOS, Linux." />
 <link rel="icon" href="icon.png" />
+<link rel="canonical" href="https://hotragn.github.io/pilotwick/" />
 
 <meta property="og:title" content="Pilotwick — a local-first desktop companion" />
 <meta property="og:description" content="Reacts to your agents, editors and CI. Keeps your tasks and focus timer on screen. No account, no telemetry." />
 <meta property="og:image" content="https://hotragn.github.io/pilotwick/hero.png" />
+<meta property="og:url" content="https://hotragn.github.io/pilotwick/" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
 
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
 <style>
+  /* Zinc neutrals with a single warm accent taken from the app icon.
+     Deliberately no violet: the indigo-glow palette reads as generic. */
   :root {
-    --bg: #0b0f1a;
-    --panel: #121829;
-    --line: #23304d;
-    --text: #e8edf7;
-    --muted: #93a1bd;
-    --accent: #ffb14d;
-    --accent-2: #6c5ce7;
+    --bg:      #0c0c0e;
+    --raise:   #141417;
+    --line:    #26262b;
+    --line-hi: #34343b;
+    --text:    #f4f4f5;
+    --muted:   #a1a1aa;
+    --dim:     #71717a;
+    --accent:  #f0a44a;
+    --ease:    cubic-bezier(0.16, 1, 0.3, 1);
   }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
-    margin: 0;
-    background:
-      radial-gradient(900px 520px at 18% -8%, #1d2647 0%, transparent 60%),
-      radial-gradient(700px 420px at 92% 8%, #2a1d52 0%, transparent 58%),
-      var(--bg);
-    color: var(--text);
-    font: 16px/1.65 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, sans-serif;
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: Geist, ui-sans-serif, system-ui, sans-serif;
+    font-size: 16px; line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
-  header { padding: 40px 0 8px; display: flex; align-items: center; gap: 12px; }
-  header img { width: 38px; height: 38px; border-radius: 9px; }
-  header b { font-size: 17px; letter-spacing: -0.01em; }
-  header nav { margin-left: auto; display: flex; gap: 22px; }
-  header nav a { color: var(--muted); text-decoration: none; font-size: 14px; }
-  header nav a:hover { color: var(--text); }
+  /* Grain sits on a fixed, non-interactive layer so it never repaints
+     while scrolling. */
+  body::after {
+    content: ""; position: fixed; inset: 0; z-index: 60; pointer-events: none;
+    opacity: .022; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+  code, .mono { font-family: "Geist Mono", ui-monospace, monospace; }
+
+  /* ── nav ─────────────────────────────────────────────────────────── */
+  nav.top {
+    position: sticky; top: 0; z-index: 40;
+    backdrop-filter: blur(14px); background: rgba(12,12,14,.72);
+    border-bottom: 1px solid transparent; transition: border-color .3s var(--ease);
+  }
+  nav.top.stuck { border-bottom-color: var(--line); }
+  .navrow { display: flex; align-items: center; gap: 12px; padding: 14px 0; }
+  .navrow img { width: 30px; height: 30px; border-radius: 8px; }
+  .navrow b { font-weight: 600; letter-spacing: -.01em; }
+  .navlinks { margin-left: auto; display: flex; gap: 24px; align-items: center; }
+  .navlinks a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color .2s var(--ease); }
+  .navlinks a:hover { color: var(--text); }
+
+  /* ── hero: asymmetric 7/5 split, never centred ───────────────────── */
+  .hero { display: grid; grid-template-columns: 1fr; gap: 40px; padding: 72px 0 56px; }
+  @media (min-width: 900px) {
+    .hero { grid-template-columns: 1.35fr 1fr; gap: 64px; align-items: center; padding: 104px 0 80px; }
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-size: 12.5px; color: var(--muted); letter-spacing: .02em;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 13px 5px 9px;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 99px; background: var(--accent); animation: breathe 2.6s ease-in-out infinite; }
+  @keyframes breathe { 0%,100% { opacity: .45; transform: scale(.84); } 50% { opacity: 1; transform: scale(1); } }
 
   h1 {
-    font-size: clamp(34px, 5.6vw, 58px);
-    line-height: 1.06;
-    letter-spacing: -0.03em;
-    margin: 44px 0 18px;
-    max-width: 17ch;
+    font-size: clamp(38px, 5.4vw, 64px); line-height: 1.02;
+    letter-spacing: -.035em; font-weight: 600;
+    margin: 22px 0 20px; max-width: 15ch;
   }
-  h1 em { font-style: normal; color: var(--accent); }
-  .lede { font-size: clamp(17px, 2.1vw, 20px); color: var(--muted); max-width: 62ch; margin: 0 0 30px; }
+  h1 span { color: var(--accent); }
+  .lede { font-size: 17.5px; color: var(--muted); max-width: 54ch; margin: 0 0 30px; }
 
-  .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .cta { display: flex; flex-wrap: wrap; gap: 11px; align-items: center; }
   .btn {
-    display: inline-block; padding: 13px 22px; border-radius: 11px;
-    font-weight: 650; font-size: 15px; text-decoration: none; border: 1px solid transparent;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 20px; border-radius: 10px; font-size: 14.5px; font-weight: 600;
+    text-decoration: none; border: 1px solid transparent;
+    transition: transform .25s var(--ease), background .25s var(--ease), border-color .25s var(--ease);
+    will-change: transform;
   }
-  .btn-primary { background: var(--accent); color: #2a1803; }
-  .btn-primary:hover { background: #ffc06b; }
-  .btn-ghost { border-color: var(--line); color: var(--text); }
-  .btn-ghost:hover { background: #18203a; }
-  .platforms { color: var(--muted); font-size: 13px; }
+  .btn:active { transform: translateY(1px) scale(.985); }
+  .btn-1 { background: var(--accent); color: #241505; }
+  .btn-1:hover { background: #f7b665; }
+  .btn-2 { border-color: var(--line-hi); color: var(--text); }
+  .btn-2:hover { background: var(--raise); }
+  .meta { font-size: 13px; color: var(--dim); }
 
-  .shot { margin: 46px 0 8px; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 70px rgba(0,0,0,.5); }
-  .shot img { display: block; width: 100%; }
+  .install {
+    margin-top: 26px; display: flex; align-items: center; gap: 12px;
+    border: 1px solid var(--line); border-radius: 11px;
+    background: var(--raise); padding: 11px 13px; max-width: 430px;
+  }
+  .install code { font-size: 13px; color: var(--muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .install code b { color: var(--accent); font-weight: 500; }
+  .copy {
+    background: none; border: 1px solid var(--line-hi); color: var(--muted);
+    border-radius: 7px; padding: 5px 10px; font-size: 12px; cursor: pointer;
+    font-family: inherit; transition: all .2s var(--ease);
+  }
+  .copy:hover { color: var(--text); border-color: var(--dim); }
 
-  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); margin: 68px 0 20px; font-weight: 700; }
+  /* Hero art: floats gently, tilts slightly toward the pointer. */
+  .art { position: relative; }
+  .art-inner {
+    border: 1px solid var(--line); border-radius: 20px; overflow: hidden;
+    background: var(--raise); transform-style: preserve-3d;
+    transition: transform .5s var(--ease);
+    animation: float 7s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100% { translate: 0 0; } 50% { translate: 0 -9px; } }
+  .art-inner img { display: block; width: 100%; }
 
-  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; }
-  .card h3 { margin: 0 0 8px; font-size: 16px; letter-spacing: -0.01em; }
-  .card p { margin: 0; color: var(--muted); font-size: 14.5px; }
-  .card .k { color: var(--accent); font-weight: 700; }
+  /* ── sections ────────────────────────────────────────────────────── */
+  h2 {
+    font-size: 12px; text-transform: uppercase; letter-spacing: .16em;
+    color: var(--dim); font-weight: 600; margin: 0 0 24px;
+  }
+  section { padding: 64px 0; border-top: 1px solid var(--line); }
 
-  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
-  td { padding: 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
-  td:first-child { color: var(--muted); width: 42%; padding-right: 20px; }
+  /* Bento: deliberately unequal, never three matching cards. */
+  .bento { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 880px) {
+    .bento { grid-template-columns: 1.55fr 1fr; grid-auto-rows: minmax(150px, auto); }
+    .b-tall { grid-row: span 2; }
+  }
+  .tile {
+    border: 1px solid var(--line); border-radius: 18px; padding: 26px 28px;
+    background: linear-gradient(180deg, var(--raise), #101013);
+    position: relative; overflow: hidden;
+    transition: border-color .35s var(--ease), transform .35s var(--ease);
+  }
+  .tile:hover { border-color: var(--line-hi); transform: translateY(-2px); }
+  .tile h3 { margin: 0 0 8px; font-size: 16.5px; font-weight: 600; letter-spacing: -.012em; }
+  .tile p { margin: 0; color: var(--muted); font-size: 14.5px; max-width: 46ch; }
+  .tile .num { font-family: "Geist Mono", monospace; font-size: 12px; color: var(--dim); letter-spacing: .04em; }
 
-  footer { margin: 80px 0 60px; color: var(--muted); font-size: 13.5px; border-top: 1px solid var(--line); padding-top: 26px; display: flex; gap: 18px; flex-wrap: wrap; }
-  footer a { color: var(--muted); }
-  .note { color: var(--muted); font-size: 13.5px; margin-top: 14px; }
+  /* The CI tile owns the story, so it gets the live element. */
+  .chips { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px;
+    border: 1px solid var(--line-hi); border-radius: 8px; padding: 6px 11px;
+    font-family: "Geist Mono", monospace; color: var(--muted);
+  }
+  .chip.bad { color: #f0806a; border-color: #4a2723; background: #1d1412; }
+  .chip.bad .dot { background: #f0806a; }
+  .chip.run .dot { background: var(--accent); }
+
+  .rows { display: grid; gap: 0; }
+  .row { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  @media (min-width: 760px) { .row { grid-template-columns: 250px 1fr; gap: 28px; align-items: baseline; } }
+  .row dt { color: var(--text); font-size: 14.5px; font-weight: 500; }
+  .row dd { margin: 0; color: var(--muted); font-size: 14.5px; }
+  .row:last-child { border-bottom: 0; }
+
+  footer { padding: 46px 0 64px; border-top: 1px solid var(--line); color: var(--dim); font-size: 13.5px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+  footer a { color: var(--dim); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+
+  /* Staggered reveal, driven by IntersectionObserver, transform+opacity only. */
+  .rise { opacity: 0; transform: translateY(14px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+  .rise.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .rise { opacity: 1; transform: none; transition: none; }
+    .art-inner, .dot { animation: none; }
+    html { scroll-behavior: auto; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header>
+<nav class="top" id="nav">
+  <div class="wrap navrow">
     <img src="icon.png" alt="" />
     <b>Pilotwick</b>
-    <nav>
+    <span class="navlinks">
+      <a href="#what">What it does</a>
+      <a href="#why">Why</a>
       <a href="https://github.com/Hotragn/pilotwick">GitHub</a>
-      <a href="https://github.com/Hotragn/pilotwick/releases">Releases</a>
-      <a href="https://github.com/Hotragn/pilotwick/blob/main/docs/ARCHITECTURE.md">Docs</a>
-    </nav>
+      <a href="https://github.com/Hotragn/pilotwick/releases/latest">Download</a>
+    </span>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div>
+      <span class="eyebrow"><span class="dot"></span>v0.1.0 · Windows, macOS, Linux</span>
+      <h1>Your desktop, quietly <span>aware</span> of what you're doing.</h1>
+      <p class="lede">
+        Pilotwick reacts to your real work — the agent that's thinking, the
+        editor you're in, the build that just went red. It carries your tasks
+        and focus timer too. All of it runs on your machine.
+      </p>
+      <div class="cta">
+        <a class="btn btn-1" id="magnet" href="https://github.com/Hotragn/pilotwick/releases/latest">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          Download
+        </a>
+        <a class="btn btn-2" href="https://github.com/Hotragn/pilotwick">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.6.7-4.9 4.5 1.4 6.5L12 16.8 6 20l1.4-6.5L2.5 9l6.6-.7z"/></svg>
+          Star on GitHub
+        </a>
+        <span class="meta">MIT · 1.3 MB</span>
+      </div>
+      <div class="install">
+        <code><b>git</b> clone https://github.com/Hotragn/pilotwick</code>
+        <button class="copy" id="copy" type="button">Copy</button>
+      </div>
+    </div>
+    <div class="art">
+      <div class="art-inner" id="tilt"><img src="hero.png" alt="Pilotwick's Companion Studio with the companion beside it" /></div>
+    </div>
   </header>
 
-  <h1>Your desktop, <em>quietly aware</em> of what you're doing.</h1>
-
-  <p class="lede">
-    Pilotwick is a small companion that lives on your screen and reacts to your
-    real work — the agent that's thinking, the editor you're in, the build that
-    just went red. It holds your tasks and your focus timer too. Everything runs
-    on your machine.
-  </p>
-
-  <div class="cta">
-    <a class="btn btn-primary" href="https://github.com/Hotragn/pilotwick/releases/latest">Download</a>
-    <a class="btn btn-ghost" href="https://github.com/Hotragn/pilotwick">Star on GitHub</a>
-    <span class="platforms">Windows · macOS · Linux · MIT</span>
-  </div>
-
-  <div class="shot"><img src="hero.png" alt="Pilotwick's Companion Studio with the pet beside it" /></div>
-
-  <h2>What it's actually for</h2>
-  <div class="grid">
-    <div class="card">
-      <h3>See CI without a tab</h3>
-      <p>Kick off a build and go do something else. When it breaks, the pet turns red, hisses, and keeps a <span class="k">CI</span> chip up until you deal with it.</p>
+  <section id="what">
+    <h2>What it's actually for</h2>
+    <div class="bento">
+      <div class="tile b-tall rise">
+        <span class="num">01</span>
+        <h3>See CI without opening a tab</h3>
+        <p>
+          Start a build and go do something else. When it breaks, the companion
+          turns red and keeps a chip up until you deal with it. Reads your own
+          <code>git</code> and <code>gh</code> — nothing is proxied through us.
+        </p>
+        <div class="chips">
+          <span class="chip run"><span class="dot"></span>CI running</span>
+          <span class="chip bad"><span class="dot"></span>CI failed on main</span>
+          <span class="chip">3 reviews waiting</span>
+        </div>
+      </div>
+      <div class="tile rise">
+        <span class="num">02</span>
+        <h3>Know when the agent finishes</h3>
+        <p>Stop babysitting a terminal. It reads whichever assistant you use, not one vendor's.</p>
+      </div>
+      <div class="tile rise">
+        <span class="num">03</span>
+        <h3>Keep one thing in view</h3>
+        <p>Tasks with real reminders, a timer beside the companion, and an honest record of where the day went.</p>
+      </div>
     </div>
-    <div class="card">
-      <h3>Know when the agent is done</h3>
-      <p>Stop watching a terminal. Pilotwick reads whichever assistant you use — it isn't tied to one vendor — and celebrates when a long run finishes.</p>
-    </div>
-    <div class="card">
-      <h3>Keep one thing in view</h3>
-      <p>Tasks with real reminders, a Pomodoro timer beside the pet, and an honest breakdown of where the day actually went.</p>
-    </div>
-  </div>
+  </section>
 
-  <h2>Why it's different</h2>
-  <table>
-    <tr><td>Works with every tool</td><td>Editors, terminals, browsers, chat, design apps, games and git — not one company's agent.</td></tr>
-    <tr><td>Local-first</td><td>No account, no telemetry, no backend. Two opt-in features touch the network, both off by default.</td></tr>
-    <tr><td>Never in the way</td><td>Click-through everywhere except the pet itself, and it steps aside for presentations and fullscreen.</td></tr>
-    <tr><td>Yours to change</td><td>Add an app reaction in one TypeScript file, or upload your own artwork as a shareable profile.</td></tr>
-  </table>
+  <section id="why">
+    <h2>Why it's different</h2>
+    <dl class="rows">
+      <div class="row rise"><dt>Works with every tool</dt><dd>Editors, terminals, browsers, chat, design apps, games and git. Not one company's agent.</dd></div>
+      <div class="row rise"><dt>Local-first by construction</dt><dd>No account, no telemetry, no backend. Two opt-in features reach the network, both off by default.</dd></div>
+      <div class="row rise"><dt>Never in the way</dt><dd>Click-through everywhere except the companion itself, and it steps aside for presentations and fullscreen.</dd></div>
+      <div class="row rise"><dt>Yours to change</dt><dd>Add an app reaction in one TypeScript file, or import someone else's artwork as a single shareable profile.</dd></div>
+    </dl>
+  </section>
 
-  <h2>What touches the network</h2>
-  <table>
-    <tr><td>Weather moods <em>(opt-in)</em></td><td>Open-Meteo — the city name you typed, nothing else.</td></tr>
-    <tr><td>Work status <em>(opt-in)</em></td><td>GitHub, through your own <code>gh</code> CLI, using credentials you already authorised.</td></tr>
-  </table>
-  <p class="note">
-    Typing is counted, never recorded — the keyboard hook discards the key code
-    before it reaches the app. Window titles are matched locally and never leave
-    the machine.
-  </p>
+  <section id="network">
+    <h2>What touches the network</h2>
+    <dl class="rows">
+      <div class="row rise"><dt>Weather moods <span class="meta">opt-in</span></dt><dd>Open-Meteo. The city name you typed, nothing else.</dd></div>
+      <div class="row rise"><dt>Work status <span class="meta">opt-in</span></dt><dd>GitHub, through your own <code>gh</code> CLI, with credentials you already authorised.</dd></div>
+      <div class="row rise"><dt>Everything else</dt><dd>Stays here. Typing is counted, never recorded — the keyboard hook discards the key code before it reaches the app.</dd></div>
+    </dl>
+  </section>
 
   <footer>
     <span>MIT licensed</span>
     <a href="https://github.com/Hotragn/pilotwick">Source</a>
     <a href="https://github.com/Hotragn/pilotwick/issues">Issues</a>
-    <a href="https://github.com/Hotragn/pilotwick/blob/main/CONTRIBUTING.md">Contribute</a>
+    <a href="https://github.com/Hotragn/pilotwick/tree/main/community/profiles">Profiles</a>
     <span style="margin-left:auto">A pilot light for your workday.</span>
   </footer>
-
 </div>
+
+<script>
+  // Sticky nav hairline.
+  const nav = document.getElementById('nav');
+  new IntersectionObserver(
+    ([e]) => nav.classList.toggle('stuck', e.intersectionRatio < 1),
+    { threshold: [1] }
+  ).observe(nav);
+
+  // Staggered reveals. Cheap, and unobserved once shown.
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (!e.isIntersecting) return;
+      setTimeout(() => e.target.classList.add('in'), i * 70);
+      io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.rise').forEach((el) => io.observe(el));
+
+  // Magnetic CTA and pointer tilt, both written straight to transform so
+  // nothing re-renders and nothing animates layout properties.
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) {
+    const magnet = document.getElementById('magnet');
+    magnet.addEventListener('pointermove', (e) => {
+      const r = magnet.getBoundingClientRect();
+      magnet.style.transform =
+        `translate(${(e.clientX - r.left - r.width / 2) * 0.16}px, ${(e.clientY - r.top - r.height / 2) * 0.22}px)`;
+    });
+    magnet.addEventListener('pointerleave', () => { magnet.style.transform = ''; });
+
+    const tilt = document.getElementById('tilt');
+    tilt.parentElement.addEventListener('pointermove', (e) => {
+      const r = tilt.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      tilt.style.transform = `perspective(900px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg)`;
+    });
+    tilt.parentElement.addEventListener('pointerleave', () => { tilt.style.transform = ''; });
+  }
+
+  // Copy, with a real confirmed state rather than a silent no-op.
+  const copy = document.getElementById('copy');
+  copy.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText('git clone https://github.com/Hotragn/pilotwick');
+      copy.textContent = 'Copied';
+    } catch { copy.textContent = 'Press Ctrl+C'; }
+    setTimeout(() => { copy.textContent = 'Copy'; }, 1800);
+  });
+</script>
 </body>
 </html>

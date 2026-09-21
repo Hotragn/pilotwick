@@ -5,11 +5,10 @@
 **A tiny, context-aware creature that lives on your screen — and actually helps.**
 It watches your cursor, cheers when your AI finishes a long task, holds your to-do list, runs your focus timer, and can be *anything* you want it to be.
 
-[![Made with Tauri](https://img.shields.io/badge/Tauri-2.0-24C8DB?logo=tauri&logoColor=white)](https://tauri.app)
-[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://react.dev)
-[![Rust](https://img.shields.io/badge/Rust-🦀-orange?logo=rust)](https://www.rust-lang.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![CI](https://github.com/Hotragn/pilotwick/actions/workflows/ci.yml/badge.svg)](https://github.com/Hotragn/pilotwick/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/Hotragn/pilotwick?include_prereleases&sort=semver)](https://github.com/Hotragn/pilotwick/releases)
+[![Downloads](https://img.shields.io/github/downloads/Hotragn/pilotwick/total)](https://github.com/Hotragn/pilotwick/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-black)](LICENSE)
 
 *1.3 MB installer · ~30 MB RAM · no account, no telemetry, no cloud*
 
@@ -20,6 +19,27 @@ It watches your cursor, cheers when your AI finishes a long task, holds your to-
 **[pilotwick.app](https://hotragn.github.io/pilotwick/) · [Download](../../releases) · [What it does](#-what-makes-pilotwick-different) · [Create your own](#-create-your-own-companion) · [Add an integration](#-add-an-app-integration-in-15-lines) · [Showcase](#-showcase)**
 
 </div>
+
+---
+
+## Install
+
+**[Download for your platform →](https://github.com/Hotragn/pilotwick/releases/latest)** — Windows, macOS (Intel + Apple Silicon), Linux.
+
+Or build it:
+
+```bash
+git clone https://github.com/Hotragn/pilotwick
+cd pilotwick
+npm install
+npm run tauri dev
+```
+
+Prereqs: Node 18+, Rust via [rustup](https://rustup.rs), and the
+[Tauri system deps](https://tauri.app/start/prerequisites/) for your OS.
+
+Unsigned for now, so Windows SmartScreen and macOS Gatekeeper warn on first
+run — "More info → Run anyway", or right-click → Open on macOS.
 
 ---
 
@@ -58,22 +78,13 @@ Most desktop pets are cute but oblivious, and you close them by the second day. 
 
 And it's a **true overlay**: frameless, transparent, always-on-top, and **click-through** — your clicks pass right through it unless you're actually on the pet. Zero workflow interference.
 
-## 🚀 Quick start
-
-```bash
-# Prereqs: Node 18+, Rust (rustup.rs), and Tauri OS deps → https://tauri.app/start/prerequisites/
-
-git clone https://github.com/YOURNAME/pilotwick
-cd pilotwick
-npm install
-npm run tauri dev      # 🐾 appears in the bottom-right of your screen
-```
-
-Build a tiny native installer for your OS:
+## Building a release
 
 ```bash
 npm run tauri build
 ```
+
+Or tag a version and CI builds every platform for you.
 
 ### Controls
 
