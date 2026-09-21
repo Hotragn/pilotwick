@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🐾 Pilotwick — Your Desktop Companion
+# 🐾 Pilotwick - Your Custom Desktop Companion
 
-**A tiny, context-aware creature that lives on your screen — and actually helps.**
+**A tiny, context-aware pet that lives on your screen and actually helps.**
 It watches your cursor, cheers when your AI finishes a long task, holds your to-do list, runs your focus timer, and can be *anything* you want it to be.
 
 [![CI](https://github.com/Hotragn/pilotwick/actions/workflows/ci.yml/badge.svg)](https://github.com/Hotragn/pilotwick/actions/workflows/ci.yml)
