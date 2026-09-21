@@ -4,12 +4,12 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Pilotwick — a local-first desktop companion</title>
-<meta name="description" content="A desktop companion that reacts to your real work: the agent that is thinking, the editor you are in, the build that just went red. Local-first, vendor-neutral, no telemetry. Windows, macOS, Linux." />
+<meta name="description" content="A desktop companion that reacts to your real work: the agent that is thinking, the editor you are in, the build that just went red. Try the live one on this page. Local-first, no telemetry. Windows, macOS, Linux." />
 <link rel="icon" href="icon.png" />
 <link rel="canonical" href="https://hotragn.github.io/pilotwick/" />
 
 <meta property="og:title" content="Pilotwick — a local-first desktop companion" />
-<meta property="og:description" content="Reacts to your agents, editors and CI. Keeps your tasks and focus timer on screen. No account, no telemetry." />
+<meta property="og:description" content="The companion on this page is the real one. Move your mouse, scroll, type — it reacts. Then put it on your desktop." />
 <meta property="og:image" content="https://hotragn.github.io/pilotwick/hero.png" />
 <meta property="og:url" content="https://hotragn.github.io/pilotwick/" />
 <meta property="og:type" content="website" />
@@ -20,43 +20,29 @@
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
 <style>
-  /* Zinc neutrals with a single warm accent taken from the app icon.
-     Deliberately no violet: the indigo-glow palette reads as generic. */
   :root {
-    --bg:      #0c0c0e;
-    --raise:   #141417;
-    --line:    #26262b;
-    --line-hi: #34343b;
-    --text:    #f4f4f5;
-    --muted:   #a1a1aa;
-    --dim:     #71717a;
-    --accent:  #f0a44a;
-    --ease:    cubic-bezier(0.16, 1, 0.3, 1);
+    --bg: #0c0c0e; --raise: #141417; --line: #26262b; --line-hi: #34343b;
+    --text: #f4f4f5; --muted: #a1a1aa; --dim: #71717a;
+    --accent: #f0a44a;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
     margin: 0; overflow-x: hidden; background: var(--bg); color: var(--text);
     font-family: Geist, ui-sans-serif, system-ui, sans-serif;
-    font-size: 16px; line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
   }
-  /* Grain sits on a fixed, non-interactive layer so it never repaints
-     while scrolling. */
   body::after {
     content: ""; position: fixed; inset: 0; z-index: 60; pointer-events: none;
-    opacity: .022; mix-blend-mode: overlay;
+    opacity: .02; mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   .wrap { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
   code, .mono { font-family: "Geist Mono", ui-monospace, monospace; }
 
-  /* ── nav ─────────────────────────────────────────────────────────── */
-  nav.top {
-    position: sticky; top: 0; z-index: 40;
-    backdrop-filter: blur(14px); background: rgba(12,12,14,.72);
-    border-bottom: 1px solid transparent; transition: border-color .3s var(--ease);
-  }
+  nav.top { position: sticky; top: 0; z-index: 40; backdrop-filter: blur(14px);
+    background: rgba(12,12,14,.72); border-bottom: 1px solid transparent; transition: border-color .3s var(--ease); }
   nav.top.stuck { border-bottom-color: var(--line); }
   .navrow { display: flex; align-items: center; gap: 12px; padding: 14px 0; }
   .navrow img { width: 30px; height: 30px; border-radius: 8px; }
@@ -64,40 +50,27 @@
   .navlinks { margin-left: auto; display: flex; gap: 24px; align-items: center; }
   .navlinks a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color .2s var(--ease); }
   .navlinks a:hover { color: var(--text); }
-  @media (max-width: 640px) {
-    .navlinks { gap: 16px; }
-    .navlinks a[href^="#"] { display: none; }
-  }
+  @media (max-width: 680px) { .navlinks { gap: 16px; } .navlinks a[href^="#"] { display: none; } }
 
-  /* ── hero: asymmetric 7/5 split, never centred ───────────────────── */
-  .hero { display: grid; grid-template-columns: 1fr; gap: 40px; padding: 72px 0 56px; }
-  @media (min-width: 900px) {
-    .hero { grid-template-columns: 1.35fr 1fr; gap: 64px; align-items: center; padding: 104px 0 80px; }
+  /* ── hero: the demo is the product, so it gets the bigger column ──── */
+  .hero { display: grid; grid-template-columns: 1fr; gap: 36px; padding: 56px 0 44px; }
+  @media (min-width: 960px) {
+    .hero { grid-template-columns: 1fr 1.08fr; gap: 56px; align-items: center; padding: 84px 0 68px; }
   }
-  .eyebrow {
-    display: inline-flex; align-items: center; gap: 9px;
-    font-size: 12.5px; color: var(--muted); letter-spacing: .02em;
-    border: 1px solid var(--line); border-radius: 999px; padding: 5px 13px 5px 9px;
-  }
-  .dot { width: 6px; height: 6px; border-radius: 99px; background: var(--accent); animation: breathe 2.6s ease-in-out infinite; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 9px; font-size: 12.5px; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 13px 5px 9px; }
+  .pulse { width: 6px; height: 6px; border-radius: 99px; background: var(--accent); animation: breathe 2.6s ease-in-out infinite; }
   @keyframes breathe { 0%,100% { opacity: .45; transform: scale(.84); } 50% { opacity: 1; transform: scale(1); } }
 
-  h1 {
-    font-size: clamp(38px, 5.4vw, 64px); line-height: 1.02;
-    letter-spacing: -.035em; font-weight: 600;
-    margin: 22px 0 20px; max-width: 15ch;
-  }
+  h1 { font-size: clamp(36px, 4.9vw, 58px); line-height: 1.03; letter-spacing: -.035em;
+    font-weight: 600; margin: 20px 0 18px; max-width: 16ch; }
   h1 span { color: var(--accent); }
-  .lede { font-size: 17.5px; color: var(--muted); max-width: 54ch; margin: 0 0 30px; }
+  .lede { font-size: 17px; color: var(--muted); max-width: 52ch; margin: 0 0 28px; }
 
   .cta { display: flex; flex-wrap: wrap; gap: 11px; align-items: center; max-width: 100%; }
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 20px; border-radius: 10px; font-size: 14.5px; font-weight: 600;
-    text-decoration: none; border: 1px solid transparent;
-    transition: transform .25s var(--ease), background .25s var(--ease), border-color .25s var(--ease);
-    will-change: transform;
-  }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 10px;
+    font-size: 14.5px; font-weight: 600; text-decoration: none; border: 1px solid transparent;
+    transition: transform .25s var(--ease), background .25s var(--ease), border-color .25s var(--ease); will-change: transform; }
   .btn:active { transform: translateY(1px) scale(.985); }
   .btn-1 { background: var(--accent); color: #241505; }
   .btn-1:hover { background: #f7b665; }
@@ -105,84 +78,75 @@
   .btn-2:hover { background: var(--raise); }
   .meta { font-size: 13px; color: var(--dim); }
 
-  .install {
-    margin-top: 26px; display: flex; align-items: center; gap: 12px;
-    border: 1px solid var(--line); border-radius: 11px;
-    background: var(--raise); padding: 11px 13px; max-width: min(430px, 100%);
-  }
-  /* min-width:0 lets a flex child actually shrink instead of forcing the row wide. */
+  .install { margin-top: 24px; display: flex; align-items: center; gap: 12px; border: 1px solid var(--line);
+    border-radius: 11px; background: var(--raise); padding: 11px 13px; max-width: min(420px, 100%); }
   .install code { font-size: 13px; color: var(--muted); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .install code b { color: var(--accent); font-weight: 500; }
-  .copy {
-    background: none; border: 1px solid var(--line-hi); color: var(--muted);
-    border-radius: 7px; padding: 5px 10px; font-size: 12px; cursor: pointer;
-    font-family: inherit; transition: all .2s var(--ease);
-  }
+  .copy { background: none; border: 1px solid var(--line-hi); color: var(--muted); border-radius: 7px;
+    padding: 5px 10px; font-size: 12px; cursor: pointer; font-family: inherit; transition: all .2s var(--ease); }
   .copy:hover { color: var(--text); border-color: var(--dim); }
 
-  /* Hero art: floats gently, tilts slightly toward the pointer. */
-  .art { position: relative; }
-  .art-inner {
-    border: 1px solid var(--line); border-radius: 20px; overflow: hidden;
-    background: var(--raise); transform-style: preserve-3d;
-    transition: transform .5s var(--ease);
-    animation: float 7s ease-in-out infinite;
-  }
-  @keyframes float { 0%,100% { translate: 0 0; } 50% { translate: 0 -9px; } }
-  .art-inner img { display: block; width: 100%; }
+  /* ── the live companion stage ─────────────────────────────────────── */
+  .stage { border: 1px solid var(--line); border-radius: 20px; background:
+      radial-gradient(120% 90% at 50% 0%, #17171c 0%, #0f0f12 70%);
+    padding: 22px 22px 18px; position: relative; overflow: hidden; }
+  .stage::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.055); border-radius: 20px; }
+  .stagehead { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .stagehead .tag { font-family: "Geist Mono", monospace; font-size: 11px; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--dim); }
+  .stagehead .live { margin-left: auto; display: inline-flex; align-items: center; gap: 7px;
+    font-family: "Geist Mono", monospace; font-size: 11.5px; color: var(--accent);
+    border: 1px solid #3a2a15; background: #1b1409; border-radius: 7px; padding: 4px 9px; }
 
-  /* ── sections ────────────────────────────────────────────────────── */
-  h2 {
-    font-size: 12px; text-transform: uppercase; letter-spacing: .16em;
-    color: var(--dim); font-weight: 600; margin: 0 0 24px;
-  }
-  section { padding: 64px 0; border-top: 1px solid var(--line); }
+  .petbox { height: 210px; display: grid; place-items: end center; padding-bottom: 6px; }
+  #livepet { width: 172px; height: 190px; cursor: grab; }
+  #livepet:active { cursor: grabbing; }
+  .deskline { height: 1px; background: linear-gradient(90deg, transparent, var(--line-hi) 22%, var(--line-hi) 78%, transparent); }
 
-  /* Bento: deliberately unequal, never three matching cards. */
+  .statechip { display: flex; justify-content: center; margin-top: 12px; }
+  .statechip span { font-family: "Geist Mono", monospace; font-size: 12px; color: var(--muted);
+    border: 1px solid var(--line); background: #101014; border-radius: 999px; padding: 5px 14px; }
+
+  .triggers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; margin-top: 16px; }
+  .trg { font-size: 12.5px; color: var(--dim); border: 1px solid var(--line); border-radius: 9px;
+    padding: 8px 11px; display: flex; gap: 8px; align-items: center; }
+  .trg b { color: var(--muted); font-weight: 500; font-family: "Geist Mono", monospace; font-size: 11.5px; }
+
+  h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .16em; color: var(--dim); font-weight: 600; margin: 0 0 24px; }
+  section { padding: 60px 0; border-top: 1px solid var(--line); }
+
   .bento { display: grid; grid-template-columns: 1fr; gap: 14px; }
-  @media (min-width: 880px) {
-    .bento { grid-template-columns: 1.55fr 1fr; grid-auto-rows: minmax(150px, auto); }
-    .b-tall { grid-row: span 2; }
-  }
-  .tile {
-    border: 1px solid var(--line); border-radius: 18px; padding: 26px 28px;
-    background: linear-gradient(180deg, var(--raise), #101013);
-    position: relative; overflow: hidden;
-    transition: border-color .35s var(--ease), transform .35s var(--ease);
-  }
+  @media (min-width: 880px) { .bento { grid-template-columns: 1.55fr 1fr; grid-auto-rows: minmax(148px, auto); } .b-tall { grid-row: span 2; } }
+  .tile { border: 1px solid var(--line); border-radius: 18px; padding: 26px 28px;
+    background: linear-gradient(180deg, var(--raise), #101013); transition: border-color .35s var(--ease), transform .35s var(--ease); }
   .tile:hover { border-color: var(--line-hi); transform: translateY(-2px); }
   .tile h3 { margin: 0 0 8px; font-size: 16.5px; font-weight: 600; letter-spacing: -.012em; }
   .tile p { margin: 0; color: var(--muted); font-size: 14.5px; max-width: 46ch; }
-  .tile .num { font-family: "Geist Mono", monospace; font-size: 12px; color: var(--dim); letter-spacing: .04em; }
-
-  /* The CI tile owns the story, so it gets the live element. */
+  .tile .num { font-family: "Geist Mono", monospace; font-size: 12px; color: var(--dim); }
   .chips { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
-  .chip {
-    display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px;
-    border: 1px solid var(--line-hi); border-radius: 8px; padding: 6px 11px;
-    font-family: "Geist Mono", monospace; color: var(--muted);
-  }
+  .chip { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; border: 1px solid var(--line-hi);
+    border-radius: 8px; padding: 6px 11px; font-family: "Geist Mono", monospace; color: var(--muted); }
   .chip.bad { color: #f0806a; border-color: #4a2723; background: #1d1412; }
-  .chip.bad .dot { background: #f0806a; }
-  .chip.run .dot { background: var(--accent); }
+  .chip.bad .pulse { background: #f0806a; }
 
-  .rows { display: grid; gap: 0; }
-  .row { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .rows { display: grid; }
+  .row { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 17px 0; border-bottom: 1px solid var(--line); }
   @media (min-width: 760px) { .row { grid-template-columns: 250px 1fr; gap: 28px; align-items: baseline; } }
   .row dt { color: var(--text); font-size: 14.5px; font-weight: 500; }
   .row dd { margin: 0; color: var(--muted); font-size: 14.5px; }
   .row:last-child { border-bottom: 0; }
 
-  footer { padding: 46px 0 64px; border-top: 1px solid var(--line); color: var(--dim); font-size: 13.5px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+  footer { padding: 44px 0 60px; border-top: 1px solid var(--line); color: var(--dim);
+    font-size: 13.5px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
   footer a { color: var(--dim); text-decoration: none; }
   footer a:hover { color: var(--text); }
 
-  /* Staggered reveal, driven by IntersectionObserver, transform+opacity only. */
   .rise { opacity: 0; transform: translateY(14px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
   .rise.in { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) {
     .rise { opacity: 1; transform: none; transition: none; }
-    .art-inner, .dot { animation: none; }
+    .pulse { animation: none; }
     html { scroll-behavior: auto; }
   }
 </style>
@@ -203,18 +167,18 @@
 </nav>
 
 <div class="wrap">
-
   <header class="hero">
     <div>
-      <span class="eyebrow"><span class="dot"></span>v0.1.0 · Windows, macOS, Linux</span>
-      <h1>Your desktop, quietly <span>aware</span> of what you're doing.</h1>
+      <span class="eyebrow"><span class="pulse"></span>v0.1.0 · Windows, macOS, Linux</span>
+      <h1>The companion on this page is the <span>real one</span>.</h1>
       <p class="lede">
-        Pilotwick reacts to your real work — the agent that's thinking, the
-        editor you're in, the build that just went red. It carries your tasks
-        and focus timer too. All of it runs on your machine.
+        Move your mouse. Scroll. Type something. It is running the same sprite
+        and the same state machine as the desktop app — reacting to you right
+        now, in this tab. Put it on your desktop and it does this for your
+        editor, your agents and your builds instead.
       </p>
       <div class="cta">
-        <a class="btn btn-1" id="magnet" href="https://github.com/Hotragn/pilotwick/releases/latest">
+        <a class="btn btn-1" id="magnet" data-celebrate href="https://github.com/Hotragn/pilotwick/releases/latest">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
           Download
         </a>
@@ -229,8 +193,23 @@
         <button class="copy" id="copy" type="button">Copy</button>
       </div>
     </div>
-    <div class="art">
-      <div class="art-inner" id="tilt"><img src="hero.png" alt="Pilotwick's Companion Studio with the companion beside it" /></div>
+
+    <div class="stage">
+      <div class="stagehead">
+        <span class="tag">Live demo</span>
+        <span class="live"><span class="pulse"></span>reacting to you</span>
+      </div>
+      <div class="petbox"><div id="livepet"></div></div>
+      <div class="deskline"></div>
+      <div class="statechip"><span id="petstate">Idle</span></div>
+      <div class="triggers">
+        <div class="trg"><b>move</b> eyes follow</div>
+        <div class="trg"><b>hover</b> petting</div>
+        <div class="trg"><b>scroll</b> plays</div>
+        <div class="trg"><b>type</b> types along</div>
+        <div class="trg"><b>type fast</b> overheats</div>
+        <div class="trg"><b>idle 14s</b> sleeps</div>
+      </div>
     </div>
   </header>
 
@@ -240,14 +219,10 @@
       <div class="tile b-tall rise">
         <span class="num">01</span>
         <h3>See CI without opening a tab</h3>
-        <p>
-          Start a build and go do something else. When it breaks, the companion
-          turns red and keeps a chip up until you deal with it. Reads your own
-          <code>git</code> and <code>gh</code> — nothing is proxied through us.
-        </p>
+        <p>Start a build and go do something else. When it breaks, the companion turns red and keeps a chip up until you deal with it. Reads your own <code>git</code> and <code>gh</code> — nothing is proxied through us.</p>
         <div class="chips">
-          <span class="chip run"><span class="dot"></span>CI running</span>
-          <span class="chip bad"><span class="dot"></span>CI failed on main</span>
+          <span class="chip"><span class="pulse"></span>CI running</span>
+          <span class="chip bad"><span class="pulse"></span>CI failed on main</span>
           <span class="chip">3 reviews waiting</span>
         </div>
       </div>
@@ -292,15 +267,11 @@
   </footer>
 </div>
 
+<script src="pet.js" defer></script>
 <script>
-  // Sticky nav hairline.
   const nav = document.getElementById('nav');
-  new IntersectionObserver(
-    ([e]) => nav.classList.toggle('stuck', e.intersectionRatio < 1),
-    { threshold: [1] }
-  ).observe(nav);
+  new IntersectionObserver(([e]) => nav.classList.toggle('stuck', e.intersectionRatio < 1), { threshold: [1] }).observe(nav);
 
-  // Staggered reveals. Cheap, and unobserved once shown.
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
       if (!e.isIntersecting) return;
@@ -310,35 +281,19 @@
   }, { rootMargin: '0px 0px -8% 0px' });
   document.querySelectorAll('.rise').forEach((el) => io.observe(el));
 
-  // Magnetic CTA and pointer tilt, both written straight to transform so
-  // nothing re-renders and nothing animates layout properties.
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!reduce) {
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const magnet = document.getElementById('magnet');
     magnet.addEventListener('pointermove', (e) => {
       const r = magnet.getBoundingClientRect();
-      magnet.style.transform =
-        `translate(${(e.clientX - r.left - r.width / 2) * 0.16}px, ${(e.clientY - r.top - r.height / 2) * 0.22}px)`;
+      magnet.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .16}px, ${(e.clientY - r.top - r.height / 2) * .22}px)`;
     });
     magnet.addEventListener('pointerleave', () => { magnet.style.transform = ''; });
-
-    const tilt = document.getElementById('tilt');
-    tilt.parentElement.addEventListener('pointermove', (e) => {
-      const r = tilt.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5;
-      const y = (e.clientY - r.top) / r.height - 0.5;
-      tilt.style.transform = `perspective(900px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg)`;
-    });
-    tilt.parentElement.addEventListener('pointerleave', () => { tilt.style.transform = ''; });
   }
 
-  // Copy, with a real confirmed state rather than a silent no-op.
   const copy = document.getElementById('copy');
   copy.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText('git clone https://github.com/Hotragn/pilotwick');
-      copy.textContent = 'Copied';
-    } catch { copy.textContent = 'Press Ctrl+C'; }
+    try { await navigator.clipboard.writeText('git clone https://github.com/Hotragn/pilotwick'); copy.textContent = 'Copied'; }
+    catch { copy.textContent = 'Press Ctrl+C'; }
     setTimeout(() => { copy.textContent = 'Copy'; }, 1800);
   });
 </script>

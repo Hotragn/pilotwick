@@ -53,7 +53,6 @@
       "msi",
       "nsis",
       "deb",
-      "appimage",
       "dmg"
     ],
     "icon": [
