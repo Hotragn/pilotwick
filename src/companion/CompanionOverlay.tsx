@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useContextEngine } from "../state/contextEngine";
 import { useCompanionStore } from "../state/companionStore";
-import { prefs, applyHotkeys } from "../state/prefs";
+import { prefs, applyHotkeys, migratePrefs } from "../state/prefs";
 import { playCue } from "../state/sound";
 import { CircleAlert, GitPullRequestArrow, Loader } from "lucide-react";
 import { useReminderLoop } from "../state/reminders";
@@ -56,6 +56,7 @@ export default function CompanionOverlay() {
   // the global hotkeys (they live in the OS, so they need re-registering
   // every launch).
   useEffect(() => {
+    migratePrefs();
     const repo = localStorage.getItem("pilotwick.gitrepo");
     if (repo) invoke("set_git_repo", { path: repo });
     void applyHotkeys();
@@ -68,8 +69,8 @@ export default function CompanionOverlay() {
 
   // Physics and the work watcher live in Rust; mirror the prefs across.
   useEffect(() => {
-    void invoke("set_perch", { enabled: p.perch });
-  }, [p.perch]);
+    void invoke("set_placement", { mode: p.placement });
+  }, [p.placement]);
 
   useEffect(() => {
     void invoke("set_work_watch", { enabled: p.workStatus });
@@ -142,6 +143,10 @@ export default function CompanionOverlay() {
     if (e.button !== 0 || e.detail >= 2) return;
     setMenuOpen(false);
     dragging.current = true;
+    // Perch and follow both move the window; pause them for the duration of
+    // the gesture so the pet cannot pull against the hand holding it.
+    void invoke("suspend_placement", { suspended: true });
+    setTimeout(() => void invoke("suspend_placement", { suspended: false }), 1200);
     // Mochi squish while dragging; the spring releases on its own.
     setGrabbed(true);
     setTimeout(() => setGrabbed(false), 700);
@@ -154,7 +159,7 @@ export default function CompanionOverlay() {
    * re-settling in response to its own animation.
    */
   useEffect(() => {
-    if (!p.gravity || p.perch) return;
+    if (!p.gravity || p.placement !== "free") return;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const un = getCurrentWindow().onMoved(() => {
       if (!dragging.current) return;
@@ -168,7 +173,7 @@ export default function CompanionOverlay() {
       clearTimeout(timer);
       un.then((fn) => fn());
     };
-  }, [p.gravity, p.perch]);
+  }, [p.gravity, p.placement]);
 
   const pinned = config.fixedMessage.trim();
 

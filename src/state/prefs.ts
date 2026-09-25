@@ -5,6 +5,8 @@ import { createPersisted } from "./persisted";
  * How the companion looks and behaves on screen. Everything here is local —
  * no account, no sync, no telemetry.
  */
+export type Placement = "free" | "perch" | "follow";
+
 export interface Prefs {
   /** Pet size multiplier; resizes the overlay window itself. */
   petScale: number;
@@ -17,8 +19,13 @@ export interface Prefs {
   notifications: boolean;
   /** Vanish while a window is fullscreen (presentations, screen shares, games). */
   hideInFullscreen: boolean;
-  /** Sit on the title bar of whatever window you are working in. */
-  perch: boolean;
+  /**
+   * Where the companion lives.
+   *  - free:   stays where you put it
+   *  - perch:  rides the title bar of the window you are working in
+   *  - follow: trots after your cursor and settles beside it
+   */
+  placement: Placement;
   /** Fall to the floor of the monitor when you let go of the pet. */
   gravity: boolean;
   /** Watch CI, review requests and uncommitted work in the chosen repo. */
@@ -39,7 +46,7 @@ const DEFAULT_PREFS: Prefs = {
   soundVolume: 0.35,
   notifications: true,
   hideInFullscreen: true,
-  perch: false,
+  placement: "free",
   gravity: false,
   workStatus: false,
   hotkeyToggle: "CommandOrControl+Shift+E",
@@ -49,6 +56,18 @@ const DEFAULT_PREFS: Prefs = {
 };
 
 export const prefs = createPersisted<Prefs>("pilotwick.prefs", DEFAULT_PREFS);
+
+/**
+ * Placement replaced an earlier `perch: boolean`. Anyone upgrading has the
+ * old key in storage, so translate it once rather than silently resetting
+ * someone's choice.
+ */
+export function migratePrefs() {
+  const raw = prefs.load() as Prefs & { perch?: boolean };
+  if (raw.perch !== undefined) {
+    void prefs.patch({ placement: raw.perch ? "perch" : "free" } as Partial<Prefs>);
+  }
+}
 
 /** Pushes the saved hotkeys to the OS. Returns an error message, or null. */
 export async function applyHotkeys(p: Prefs = prefs.load()): Promise<string | null> {

@@ -45,10 +45,20 @@ fn set_git_repo(path: Option<String>) {
     gitwatch::set_repo(path);
 }
 
-/// Turns window-perching on or off.
+/// Chooses where the companion lives: "free", "perch" or "follow".
 #[tauri::command]
-fn set_perch(enabled: bool) {
-    perch::set_perch(enabled);
+fn set_placement(mode: String) {
+    perch::set_mode(match mode.as_str() {
+        "perch" => perch::PERCH,
+        "follow" => perch::FOLLOW,
+        _ => perch::FREE,
+    });
+}
+
+/// Pauses automatic placement while the user is dragging the pet by hand.
+#[tauri::command]
+fn suspend_placement(suspended: bool) {
+    perch::suspend(suspended);
 }
 
 /// Drops the pet to the floor of its monitor with a small bounce.
@@ -185,7 +195,8 @@ pub fn run() {
             toggle_overlay,
             summon_to_cursor,
             set_overlay_scale,
-            set_perch,
+            set_placement,
+            suspend_placement,
             settle_overlay,
             set_work_watch,
             apply_hotkeys

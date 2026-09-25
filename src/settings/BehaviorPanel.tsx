@@ -76,15 +76,37 @@ export default function BehaviorPanel({ onFlash }: { onFlash: (msg: string) => v
               checked={p.hideInFullscreen}
               onChange={(v) => prefs.patch({ hideInFullscreen: v })}
             />
-            <Toggle
-              label="Perch on your active window"
-              blurb="The pet sits on the title bar of whatever you are working in and rides along as you switch apps."
-              checked={p.perch}
-              onChange={(v) => prefs.patch({ perch: v })}
-            />
+            <div className="py-2">
+              <p className="text-sm font-semibold text-slate-100">Where it lives</p>
+              <p className="mb-3 text-xs leading-relaxed text-slate-400">
+                Stay put, ride the window you are working in, or trot after your cursor.
+              </p>
+              <div className="grid gap-2 sm:grid-cols-3">
+                {(
+                  [
+                    { id: "free", label: "Stay put", hint: "Where you drop it" },
+                    { id: "perch", label: "Perch", hint: "On the active window" },
+                    { id: "follow", label: "Follow cursor", hint: "Trots after you" },
+                  ] as const
+                ).map((opt) => (
+                  <button
+                    key={opt.id}
+                    onClick={() => prefs.patch({ placement: opt.id })}
+                    className={`rounded-xl border px-3 py-2.5 text-left transition-colors ${
+                      p.placement === opt.id
+                        ? "border-teal-400 bg-teal-950/40"
+                        : "border-slate-800 bg-slate-950/60 hover:border-slate-600"
+                    }`}
+                  >
+                    <span className="block text-sm font-semibold text-slate-100">{opt.label}</span>
+                    <span className="block text-[11px] text-slate-400">{opt.hint}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
             <Toggle
               label="Gravity"
-              blurb="Let go of the pet and it falls to the bottom of the monitor with a small bounce. Ignored while perching."
+              blurb="Let go of the pet and it falls to the bottom of the monitor with a small bounce. Only applies when it stays put."
               checked={p.gravity}
               onChange={(v) => prefs.patch({ gravity: v })}
             />
