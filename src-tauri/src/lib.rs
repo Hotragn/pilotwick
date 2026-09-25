@@ -4,6 +4,7 @@ mod perch;
 mod tracker;
 mod workwatch;
 
+use tauri::Emitter;
 use tauri::{
     menu::{Menu, MenuItem},
     tray::TrayIconBuilder,
@@ -151,7 +152,12 @@ fn set_overlay_scale(app: tauri::AppHandle, scale: f64) {
 /// (Re)binds the global hotkeys. Empty strings unbind. Accepts the standard
 /// accelerator syntax, e.g. "CommandOrControl+Shift+E".
 #[tauri::command]
-fn apply_hotkeys(app: tauri::AppHandle, toggle: String, summon: String) -> Result<(), String> {
+fn apply_hotkeys(
+    app: tauri::AppHandle,
+    toggle: String,
+    summon: String,
+    capture: String,
+) -> Result<(), String> {
     let shortcuts = app.global_shortcut();
     let _ = shortcuts.unregister_all();
 
@@ -172,6 +178,14 @@ fn apply_hotkeys(app: tauri::AppHandle, toggle: String, summon: String) -> Resul
         toggle_overlay(app);
     })?;
     bind(&summon, summon_to_cursor)?;
+    // Quick capture has to work when the pet is hidden, so show it first and
+    // let the frontend open the task field.
+    bind(&capture, |app| {
+        if let Some(win) = app.get_webview_window("main") {
+            let _ = win.show();
+        }
+        let _ = app.emit("companion://quick-capture", ());
+    })?;
     Ok(())
 }
 

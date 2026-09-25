@@ -33,6 +33,8 @@ export interface Prefs {
   /** Global accelerators; empty string unbinds. */
   hotkeyToggle: string;
   hotkeySummon: string;
+  /** Opens the task field wherever you are, even if the pet is hidden. */
+  hotkeyCapture: string;
   /** Integration ids the user switched off in the Studio. */
   disabledIntegrations: string[];
   /** First-run tour completed. */
@@ -51,6 +53,7 @@ const DEFAULT_PREFS: Prefs = {
   workStatus: false,
   hotkeyToggle: "CommandOrControl+Shift+E",
   hotkeySummon: "CommandOrControl+Shift+F",
+  hotkeyCapture: "CommandOrControl+Shift+Space",
   disabledIntegrations: [],
   onboarded: false,
 };
@@ -72,7 +75,11 @@ export function migratePrefs() {
 /** Pushes the saved hotkeys to the OS. Returns an error message, or null. */
 export async function applyHotkeys(p: Prefs = prefs.load()): Promise<string | null> {
   try {
-    await invoke("apply_hotkeys", { toggle: p.hotkeyToggle, summon: p.hotkeySummon });
+    await invoke("apply_hotkeys", {
+      toggle: p.hotkeyToggle,
+      summon: p.hotkeySummon,
+      capture: p.hotkeyCapture,
+    });
     return null;
   } catch (err) {
     return err instanceof Error ? err.message : String(err);

@@ -13,7 +13,7 @@ import { Button, Card, PanelHeader, Slider, Toggle } from "./ui";
 export default function BehaviorPanel({ onFlash }: { onFlash: (msg: string) => void }) {
   const p = prefs.use();
   const [autostart, setAutostart] = useState(false);
-  const [capturing, setCapturing] = useState<"hotkeyToggle" | "hotkeySummon" | null>(null);
+  const [capturing, setCapturing] = useState<"hotkeyToggle" | "hotkeySummon" | "hotkeyCapture" | null>(null);
 
   useEffect(() => {
     isEnabled().then(setAutostart).catch(() => {});
@@ -150,6 +150,7 @@ export default function BehaviorPanel({ onFlash }: { onFlash: (msg: string) => v
               [
                 { key: "hotkeyToggle", label: "Show / hide companion" },
                 { key: "hotkeySummon", label: "Summon to cursor" },
+                { key: "hotkeyCapture", label: "Quick-capture a task" },
               ] as const
             ).map((row) => (
               <div key={row.key} className="rounded-xl border border-slate-800 bg-slate-950/60 p-3">

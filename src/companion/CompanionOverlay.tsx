@@ -48,6 +48,7 @@ export default function CompanionOverlay() {
   const work = useWorkStatus();
   const [grabbed, setGrabbed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuView, setMenuView] = useState<"dock" | "tasks">("dock");
   const shellRef = useRef<HTMLDivElement>(null);
   const petRef = useRef<HTMLDivElement>(null);
   const pending = openTasks(tasks);
@@ -107,6 +108,18 @@ export default function CompanionOverlay() {
   useEffect(() => {
     void invoke("set_interactive", { interactive: menuOpen });
   }, [menuOpen]);
+
+  // Quick capture: the global hotkey drops you straight into the task field
+  // from anywhere, without reaching for the mouse.
+  useEffect(() => {
+    const un = listen("companion://quick-capture", () => {
+      setMenuView("tasks");
+      setMenuOpen(true);
+    });
+    return () => {
+      un.then((fn) => fn());
+    };
+  }, []);
 
   // Step aside for presentations, screen shares and fullscreen games — and
   // come back only if that is what put the pet away. Someone who hid it by
@@ -212,7 +225,15 @@ export default function CompanionOverlay() {
       </AnimatePresence>
 
       <AnimatePresence>
-        {menuOpen && <QuickActions onClose={() => setMenuOpen(false)} />}
+        {menuOpen && (
+          <QuickActions
+            initialView={menuView}
+            onClose={() => {
+              setMenuOpen(false);
+              setMenuView("dock");
+            }}
+          />
+        )}
       </AnimatePresence>
 
       {weather && <WeatherEffects weather={weather} />}
@@ -251,6 +272,7 @@ export default function CompanionOverlay() {
               onPointerDown={(e) => e.stopPropagation()}
               onClick={() => {
                 playCue("pop");
+                setMenuView("dock");
                 setMenuOpen((open) => !open);
               }}
               className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full border border-slate-600/80 bg-slate-900/90 text-[13px] leading-none text-slate-200 shadow-lg backdrop-blur transition-colors hover:border-teal-400 hover:text-teal-200"

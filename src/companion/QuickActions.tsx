@@ -33,8 +33,14 @@ const DUE_CHIPS = [
   { label: "1h", mins: 60 },
 ] as const;
 
-export default function QuickActions({ onClose }: { onClose: () => void }) {
-  const [view, setView] = useState<"dock" | "tasks">("dock");
+export default function QuickActions({
+  onClose,
+  initialView = "dock",
+}: {
+  onClose: () => void;
+  initialView?: "dock" | "tasks";
+}) {
+  const [view, setView] = useState<"dock" | "tasks">(initialView);
   const config = useWellnessConfig();
   const p = prefs.use();
   const tasks = useTasks();
