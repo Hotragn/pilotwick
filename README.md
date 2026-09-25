@@ -16,9 +16,14 @@ It watches your cursor, cheers when your AI finishes a long task, holds your to-
 
 <img src="docs/assets/hero.png" alt="Pilotwick reacting to Claude, VS Code and Spotify" width="640" />
 
-**[pilotwick.app](https://hotragn.github.io/pilotwick/) · [Download](../../releases) · [What it does](#-what-makes-pilotwick-different) · [Create your own](#-create-your-own-companion) · [Add an integration](#-add-an-app-integration-in-15-lines) · [Showcase](#-showcase)**
+**[Try it live, no install](https://hotragn.github.io/pilotwick/) · [Download](../../releases) · [What it does](#-what-makes-pilotwick-different) · [Create your own](#-create-your-own-companion) · [Add an integration](#-add-an-app-integration-in-15-lines) · [Showcase](#-showcase)**
 
 </div>
+
+> **See it before you install it.** The companion on
+> **[the site](https://hotragn.github.io/pilotwick/)** is the real one —
+> same sprite, same state machine, running in your browser. Move your
+> mouse, scroll, type.
 
 ---
 
@@ -43,40 +48,56 @@ run — "More info → Run anyway", or right-click → Open on macOS.
 
 ---
 
-## ✨ What makes Pilotwick different?
+## What it does for you
 
-Most desktop pets are cute but oblivious, and you close them by the second day. Pilotwick **knows what you're doing** and **earns its place on your screen**.
+Most desktop pets are cute but oblivious, and you close them by the second
+day. Pilotwick earns its place by doing work.
 
-### It reacts to your whole day
+**Ambient work status.** Opt in and it becomes a peripheral monitor: a chip
+while CI runs, a red chip and a hiss when it fails, a nudge when a pull
+request is waiting on your review, a word when your working tree gets out of
+hand. It shells out to the `git` and `gh` you already have — nothing is
+proxied anywhere.
 
-| You do this… | Pilotwick does this |
+**Tasks it carries for you.** `Ctrl+Shift+Space` from anywhere drops you
+straight into the task field, even if the pet is hidden. Give a task a
+10m / 30m / 1h nudge and it reminds you with a speech bubble and a desktop
+notification. Open tasks ride on its collar as a badge.
+
+**A focus timer on your desktop, not in a tab.** Classic, deep-work and
+sprint presets, a countdown floating beside the pet, and accessories the
+companion earns as you finish sessions.
+
+**An honest picture of your day.** Coding versus AI versus browsing versus
+gaming, today and across the last seven days, assembled from what it already
+sees and stored only on your machine.
+
+**It knows when to disappear.** Steps aside for presentations, screen shares
+and fullscreen games — and it tells a *maximized* window from a fullscreen
+one, so it does not vanish every time you maximize a browser.
+
+### Where it lives
+
+Three placements, in the Studio under Appearance:
+
+| Mode | Behaviour |
 |---|---|
-| 🖱️ Move your mouse | Its eyes follow your cursor everywhere |
-| ⌨️ Start typing | Bounces along with your keystrokes |
-| 🤖 Open **Claude / ChatGPT / Cursor** | Enters **AI Sync** — floats and pulses with sparkles while the model thinks |
-| 👩‍💻 Focus **VS Code / JetBrains / Vim** | Switches to **Coding Mode** with floating `</>` |
-| 🎧 Play music (Spotify / YouTube Music) | Puts on headphones and vibes |
-| 🍿 Watch YouTube / Netflix / Twitch | Popcorn mode |
-| 🎮 Game, 💬 chat, 🎨 design, ✍️ write | A different face for each |
-| 🌿 Commit, switch branch, hit a conflict | Celebrates, announces, or **hisses** |
-| 🔴 CI goes red | Hisses, shows a persistent **CI** chip, sends a notification |
-| 👀 A PR needs your review | Speaks up and keeps a counter chip beside it |
-| 🥰 Hover it with your cursor | Petting mode — hearts and happy eyes |
-| ⏳ Your AI agent finishes a task | **Celebrates with starry eyes** 🎉 |
-| 😴 Walk away for 90s | Falls asleep with little Zzz's |
+| **Stay put** | Sits where you drop it. Turn on gravity and it falls to the floor with a bounce. |
+| **Perch** | Rides the title bar of whatever window you are working in, following you between apps. |
+| **Follow cursor** | Trots after your pointer and settles beside it. Stays put while you work near it. |
 
-### And it actually does things for you
+### What it reacts to
 
-- **📝 Tasks it remembers for you.** Hover the pet, open the **⋯** dock, type a thought, pick *10m / 30m / 1h*, and it nudges you when the time comes — speech bubble *and* a desktop notification. Open tasks ride on its collar as a badge.
-- **🎯 A focus timer that lives on your desktop.** Pomodoro with Classic / Deep-work / Sprint presets, a countdown floating beside the pet, and accessories your companion **earns** as you complete sessions.
-- **📊 An honest picture of your day.** Coding vs. AI vs. browsing vs. gaming, today and across the last 7 days — assembled from what the pet already sees, stored only on your machine.
-- **🚦 Ambient work status.** Opt in and the pet becomes a peripheral monitor: a chip when CI is running, a red chip and a hiss when it fails, a nudge when a pull request is waiting on your review, and a word when your working tree gets out of hand. Reads your existing `git` and `gh` — nothing leaves your machine.
-- **🪟 It perches on your windows.** Turn on perching and the pet sits on the title bar of whatever you are working in, riding along as you switch apps. Turn on gravity and it falls to the floor with a bounce when you let go.
-- **🙈 It knows when to disappear.** Automatically steps aside for presentations, screen shares and fullscreen games — and it can tell a *maximized* window from a fullscreen one, so it does not vanish every time you maximize your browser.
-- **⌨️ Global shortcuts.** `Ctrl+Shift+E` to hide or show it, `Ctrl+Shift+F` to summon it to your cursor. Rebind either in one click.
-- **🔔 Optional sound.** Short synthesized chirps for celebrations and timers — off by default, and never a sampled audio file bloating the installer.
+Your editor, terminal, browser, chat, design tools, games and music all get
+their own mood, and every one is individually switchable in the Studio.
+Beyond apps, it responds to: **AI agents** thinking and finishing, **git**
+commits, branch switches and merge conflicts, **CI** passing and failing,
+**review requests**, your **cursor** and typing, and being **hovered**.
+Leave for ninety seconds and it falls asleep.
 
-And it's a **true overlay**: frameless, transparent, always-on-top, and **click-through** — your clicks pass right through it unless you're actually on the pet. Zero workflow interference.
+It is a true overlay throughout: frameless, transparent, always-on-top and
+click-through, so your clicks pass straight through unless you are actually
+on the pet.
 
 ## Building a release
 
@@ -96,11 +117,12 @@ Or tag a version and CI builds every platform for you.
 | **Double-click** | Instant celebration 🎉 |
 | `Ctrl+Shift+E` | Show / hide from any app |
 | `Ctrl+Shift+F` | Summon to your cursor |
+| `Ctrl+Shift+Space` | Quick-capture a task from anywhere |
 | Tray icon | Show/hide · summon · Studio · quit |
 
 ## 🖥️ Platform support
 
-| | Overlay & moods | Global input | Perch / gravity | Fullscreen detection |
+| | Overlay & moods | Global input | Placement | Fullscreen detection |
 |---|---|---|---|---|
 | **Windows** | ✅ tested | ✅ | ✅ | ✅ uses window style bits |
 | **macOS** | builds | needs Accessibility permission | untested | falls back to geometry |
@@ -125,7 +147,7 @@ Right-click the pet (or use the tray) to open the Studio — a sidebar-organised
 | 📊 **Activity** | Today's breakdown, a 7-day chart, evolution progress. |
 | 🧩 **App reactions** | Every integration, individually switchable — mute the Netflix one before a screen share. |
 | 🌦️ **Your world** | Weather moods, work status (CI / reviews), and git repo watching. |
-| ⚙️ **Appearance** | Pet size, presence, perching, gravity, global shortcuts, sound, notifications, fullscreen behaviour. |
+| ⚙️ **Appearance** | Pet size, presence, placement (stay put / perch / follow), gravity, global shortcuts, sound, notifications, fullscreen behaviour. |
 
 First launch walks you through a three-screen tour; replay it any time from the sidebar.
 
@@ -235,7 +257,8 @@ be switched off individually in the Studio.
 - [x] Sound reactions (opt-in chirps)
 - [x] Auto-hide during presentations and fullscreen
 - [x] Global hotkeys + summon to cursor
-- [x] Window perching + gravity
+- [x] Window perching, gravity and follow-cursor
+- [x] Global quick-capture for tasks
 - [x] Ambient work status (CI, reviews, uncommitted work)
 - [ ] Community profile gallery site with one-click install
 - [ ] Multi-monitor wandering
